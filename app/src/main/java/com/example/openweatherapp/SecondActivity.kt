@@ -22,19 +22,13 @@ class SecondActivity : AppCompatActivity() {
 
         CITY = intent.getStringExtra("username")
         API = "afea39ac66476bd348e9352fdca613f8"
-        //Toast.makeText(this, CITY, Toast.LENGTH_LONG).show()
 
         weatherTask().execute()
-
     }
 
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
             super.onPreExecute()
-            /* Showing the ProgressBar, Making the main design GONE */
-            // findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
-            // findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
-            // findViewById<TextView>(R.id.errorText).visibility = View.GONE
         }
 
         override fun doInBackground(vararg params: String?): String? {
@@ -54,9 +48,7 @@ class SecondActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             try {
-                /* Extracting JSON returns from the API */
                 val jsonObj = JSONObject(result)
-
 
                 val main = jsonObj.getJSONObject("main")
                 val sys = jsonObj.getJSONObject("sys")
@@ -69,7 +61,6 @@ class SecondActivity : AppCompatActivity() {
                     )
                 val temp = main.getString("temp") + "°C"
                 val pressure = main.getString("pressure")
-
                 val sunrise: Long = sys.getLong("sunrise")
                 val sunset: Long = sys.getLong("sunset")
                 val weatherDescription = weather.getString("description")
@@ -88,18 +79,12 @@ class SecondActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.sunset).text =
                     "Sunset: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
                 findViewById<TextView>(R.id.pressure).text = "Pressure: " + pressure + " hPa"
-                findViewById<TextView>(R.id.iconId).text = iconId
 
                 val iconImageView = findViewById<ImageView>(R.id.imageView)
                 Picasso.get().load("http://openweathermap.org/img/wn/$iconId@2x.png").into(iconImageView);
 
-                /* Views populated, Hiding the loader, Showing the main design */
-                //findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                // findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
 
             } catch (e: Exception) {
-                //findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                // findViewById<TextView>(R.id.errorText).visibility = View.VISIBLE
             }
 
         }
