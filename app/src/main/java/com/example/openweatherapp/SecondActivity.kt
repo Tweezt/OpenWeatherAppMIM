@@ -2,13 +2,11 @@ package com.example.openweatherapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import android.os.AsyncTask
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -47,6 +45,7 @@ class SecondActivity : AppCompatActivity() {
                         Charsets.UTF_8
                     )
             } catch (e: Exception) {
+                Log.d("resperr", "response error "+e)
                 response = null
             }
             return response
@@ -55,17 +54,13 @@ class SecondActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             try {
-                Log.d("e", "pobrano")
                 /* Extracting JSON returns from the API */
                 val jsonObj = JSONObject(result)
-                Log.d("asd", "pobrano2")
+
 
                 val main = jsonObj.getJSONObject("main")
                 val sys = jsonObj.getJSONObject("sys")
-                val wind = jsonObj.getJSONObject("wind")
                 val weather = jsonObj.getJSONArray("weather").getJSONObject(0)
-
-                Log.d("zxc", "zrobione")
 
                 val updatedAt: Long = jsonObj.getLong("dt")
                 val updatedAtText =
@@ -73,33 +68,30 @@ class SecondActivity : AppCompatActivity() {
                         Date(updatedAt * 1000)
                     )
                 val temp = main.getString("temp") + "°C"
-                val tempMin = "Min Temp: " + main.getString("temp_min") + "°C"
-                val tempMax = "Max Temp: " + main.getString("temp_max") + "°C"
                 val pressure = main.getString("pressure")
-                val humidity = main.getString("humidity")
 
                 val sunrise: Long = sys.getLong("sunrise")
                 val sunset: Long = sys.getLong("sunset")
-                val windSpeed = wind.getString("speed")
                 val weatherDescription = weather.getString("description")
+                val iconId = weather.getString("icon")
+
 
                 val address = jsonObj.getString("name") + ", " + sys.getString("country")
 
                 /* Populating extracted data into our views */
                 findViewById<TextView>(R.id.address).text = address
-                Log.d("bvncbcv", address)
                 findViewById<TextView>(R.id.updated_at).text = updatedAtText
                 findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
                 findViewById<TextView>(R.id.temp).text = temp
-                findViewById<TextView>(R.id.temp_min).text = tempMin
-                findViewById<TextView>(R.id.temp_max).text = tempMax
                 findViewById<TextView>(R.id.sunrise).text =
-                    SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise * 1000))
+                    "Sunrise: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise * 1000))
                 findViewById<TextView>(R.id.sunset).text =
-                    SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
-                findViewById<TextView>(R.id.wind).text = windSpeed
-                findViewById<TextView>(R.id.pressure).text = pressure
-                findViewById<TextView>(R.id.humidity).text = humidity
+                    "Sunset: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
+                findViewById<TextView>(R.id.pressure).text = "Pressure: " + pressure
+                findViewById<TextView>(R.id.iconId).text = iconId
+
+                val iconImageView = findViewById<ImageView>(R.id.imageView)
+                Picasso.get().load("http://openweathermap.org/img/wn/11d@2x.png").into(iconImageView);
 
                 /* Views populated, Hiding the loader, Showing the main design */
                 //findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
