@@ -87,11 +87,11 @@ class SecondActivity : AppCompatActivity() {
                     "Sunrise: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise * 1000))
                 findViewById<TextView>(R.id.sunset).text =
                     "Sunset: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
-                findViewById<TextView>(R.id.pressure).text = "Pressure: " + pressure
+                findViewById<TextView>(R.id.pressure).text = "Pressure: " + pressure + " hPa"
                 findViewById<TextView>(R.id.iconId).text = iconId
 
                 val iconImageView = findViewById<ImageView>(R.id.imageView)
-                Picasso.get().load("http://openweathermap.org/img/wn/11d@2x.png").into(iconImageView);
+                Picasso.get().load("http://openweathermap.org/img/wn/$iconId@2x.png").into(iconImageView);
 
                 /* Views populated, Hiding the loader, Showing the main design */
                 //findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
